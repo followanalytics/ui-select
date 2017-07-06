@@ -531,6 +531,13 @@ uis.controller('uiSelectCtrl',
     var input = ctrl.searchInput[0],
         container = ctrl.$element[0],
         calculateContainerWidth = function() {
+          // calculate container width and subtract padding
+          var clientWidth = container.clientWidth;
+          var containerStyle = window.getComputedStyle(container);
+          var paddingLeft = parseFloat(containerStyle.paddingLeft, 10);
+          var paddingRight = parseFloat(containerStyle.paddingRight, 10);
+          var innerWidth = clientWidth - paddingLeft - paddingRight;
+
           // Return the container width only if the search input is visible
           return container.clientWidth * !!input.offsetParent;
         },
@@ -538,7 +545,9 @@ uis.controller('uiSelectCtrl',
           if (containerWidth === 0) {
             return false;
           }
-          var inputWidth = containerWidth - input.offsetLeft;
+          // sometimes offsetLeft can be a float and the value will rounded up, we need to
+          // subtract 1 pixel so the input fits the remaining space
+          var inputWidth = containerWidth - input.offsetLeft - 1;
           if (inputWidth < 50) inputWidth = containerWidth;
           ctrl.searchInput.css('width', inputWidth+'px');
           return true;
