@@ -534,9 +534,8 @@ uis.controller('uiSelectCtrl',
           // calculate container width and subtract padding
           var clientWidth = container.clientWidth;
           var containerStyle = window.getComputedStyle(container);
-          var paddingLeft = parseFloat(containerStyle.paddingLeft, 10);
           var paddingRight = parseFloat(containerStyle.paddingRight, 10);
-          var innerWidth = clientWidth - paddingLeft - paddingRight;
+          var innerWidth = clientWidth - paddingRight;
 
           // Return the container width only if the search input is visible
           return innerWidth * !!input.offsetParent;
