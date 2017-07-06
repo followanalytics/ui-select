@@ -539,7 +539,7 @@ uis.controller('uiSelectCtrl',
           var innerWidth = clientWidth - paddingLeft - paddingRight;
 
           // Return the container width only if the search input is visible
-          return container.clientWidth * !!input.offsetParent;
+          return innerWidth * !!input.offsetParent;
         },
         updateIfVisible = function(containerWidth) {
           if (containerWidth === 0) {
