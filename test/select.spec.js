@@ -2971,6 +2971,28 @@ describe('ui-select tests', function () {
         triggerKeydown(searchInput, Key.Enter);
         expect(el.scope().$select.activeIndex).toBe(2);
       });
+
+      it('should not skip last list item when going down with remove-selected on false and last item is disabled', function() {
+        var el = createUiSelectMultiple({ uiDisableChoice: "person.email == 'natasha@email.com'", removeSelected: false });
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        var numberOfClicks = 7; // end of list
+        for(var i = 0; i < numberOfClicks; i++) {
+          triggerKeydown(searchInput, Key.Down);
+        }
+        expect(el.scope().$select.activeIndex).toBe(6);
+      });
+
+      it('should not increment activeIndex when going down with remove-selected on false and all options are disabled', function() {
+        scope.selection.selectedMultiple = scope.people;
+        var el = createUiSelectMultiple({removeSelected: false , closeOnSelect: false});
+        openDropdown(el);
+        var searchInput = el.find('.ui-select-search');
+        expect(el.scope().$select.activeIndex).toBe(0);
+        triggerKeydown(searchInput, Key.Down);
+        expect(el.scope().$select.activeIndex).toBe(0);
+      });
     });
 
     describe('resetSearchInput option multiple', function () {

@@ -569,9 +569,12 @@ uis.controller('uiSelectCtrl',
       case KEY.DOWN:
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
         else if (ctrl.activeIndex < ctrl.items.length - 1) {
-          var idx = ++ctrl.activeIndex;
+          var idx = ctrl.activeIndex + 1;
           while(_isItemDisabled(ctrl.items[idx]) && idx < ctrl.items.length) {
-            ctrl.activeIndex = ++idx;
+            ++idx;
+          }
+          if (idx < ctrl.items.length) { // only assign the new index if it doesn't exceed the items list length
+            ctrl.activeIndex = idx;
           }
         }
         break;
