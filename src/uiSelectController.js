@@ -531,20 +531,28 @@ uis.controller('uiSelectCtrl',
     var input = ctrl.searchInput[0],
         container = ctrl.$element[0],
         calculateContainerWidth = function() {
+          // calculate container width and subtract padding
+          var clientWidth = container.clientWidth;
+          var containerStyle = window.getComputedStyle(container);
+          var paddingRight = parseFloat(containerStyle.paddingRight, 10);
+          var innerWidth = clientWidth - paddingRight;
+
           // Return the container width only if the search input is visible
-          return container.clientWidth * !!input.offsetParent;
+          return innerWidth * !!input.offsetParent;
         },
         updateIfVisible = function(containerWidth) {
           if (containerWidth === 0) {
             return false;
           }
-          var inputWidth = containerWidth - input.offsetLeft;
+          // sometimes offsetLeft can be a float and the value will rounded up, we need to
+          // subtract 1 pixel so the input fits the remaining space
+          var inputWidth = containerWidth - input.offsetLeft - 1;
           if (inputWidth < 50) inputWidth = containerWidth;
           ctrl.searchInput.css('width', inputWidth+'px');
           return true;
         };
 
-    ctrl.searchInput.css('width', '10px');
+    ctrl.searchInput.css('width', '50px');
     $timeout(function() { //Give tags time to render correctly
       if (sizeWatch === null && !updateIfVisible(calculateContainerWidth())) {
         sizeWatch = $scope.$watch(function() {
@@ -569,9 +577,12 @@ uis.controller('uiSelectCtrl',
       case KEY.DOWN:
         if (!ctrl.open && ctrl.multiple) ctrl.activate(false, true); //In case its the search input in 'multiple' mode
         else if (ctrl.activeIndex < ctrl.items.length - 1) {
-          var idx = ++ctrl.activeIndex;
+          var idx = ctrl.activeIndex + 1;
           while(_isItemDisabled(ctrl.items[idx]) && idx < ctrl.items.length) {
-            ctrl.activeIndex = ++idx;
+            ++idx;
+          }
+          if (idx < ctrl.items.length) { // only assign the new index if it doesn't exceed the items list length
+            ctrl.activeIndex = idx;
           }
         }
         break;
