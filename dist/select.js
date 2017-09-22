@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.8 - 2017-09-22T09:20:15.778Z
+ * Version: 0.19.8 - 2017-09-22T09:52:59.694Z
  * License: MIT
  */
 
@@ -248,7 +248,7 @@ uis.directive('uiSelectChoices',
 
         scope.$watch('$select.search', function(newValue) {
           if(newValue && !$select.open && $select.multiple) $select.activate(false, true);
-          $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
+          $select.activeIndex = ($select.tagging.isActivated || $select.disableDefaultHighlight) ? -1 : 0;
           if (!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) {
             $select.refresh(attrs.refresh);
           } else {
