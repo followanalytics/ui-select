@@ -149,6 +149,10 @@ uis.directive('uiSelect',
           }
         });
 
+        attrs.$observe('disableDefaultHighlight', function() {
+          $select.disableDefaultHighlight = scope.$eval(attrs.disableDefaultHighlight);
+        });
+
         attrs.$observe('spinnerEnabled', function() {
           // $eval() is needed otherwise we get a string instead of a boolean
           var spinnerEnabled = scope.$eval(attrs.spinnerEnabled);
