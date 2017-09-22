@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.7 - 2017-07-10T13:23:28.397Z
+ * Version: 0.19.8 - 2017-09-22T09:20:15.778Z
  * License: MIT
  */
 
@@ -371,7 +371,7 @@ uis.controller('uiSelectCtrl',
             return angular.equals(this, item);
           }, ctrl.selected);
         } else {
-          ctrl.activeIndex = 0;
+          ctrl.activeIndex = ctrl.disableDefaultHighlight ? -1 : 0;
         }
       }
     }
@@ -399,7 +399,7 @@ uis.controller('uiSelectCtrl',
       ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
       // ensure that the index is set to zero for tagging variants
       // that where first option is auto-selected
-      if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false ) {
+      if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false  && ctrl.disableDefaultHighlight !== true) {
         ctrl.activeIndex = 0;
       }
 
@@ -1198,6 +1198,10 @@ uis.directive('uiSelect',
           }
         });
 
+        attrs.$observe('disableDefaultHighlight', function() {
+          $select.disableDefaultHighlight = scope.$eval(attrs.disableDefaultHighlight);
+        });
+
         attrs.$observe('spinnerEnabled', function() {
           // $eval() is needed otherwise we get a string instead of a boolean
           var spinnerEnabled = scope.$eval(attrs.spinnerEnabled);
@@ -1811,7 +1815,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
 
         if ( ! KEY.isVerticalMovement(e.which) ) {
           scope.$evalAsync( function () {
-            $select.activeIndex = $select.taggingLabel === false ? -1 : 0;
+            $select.activeIndex = ($select.taggingLabel === false || $select.disableDefaultHighlight) ? -1 : 0;
           });
         }
         // Push a "create new" item into array if there is a search string
@@ -1822,7 +1826,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
             return;
           }
           // always reset the activeIndex to the first item when tagging
-          $select.activeIndex = $select.taggingLabel === false ? -1 : 0;
+          $select.activeIndex = ($select.taggingLabel === false || $select.disableDefaultHighlight) ? -1 : 0;
           // taggingLabel === false bypasses all of this
           if ($select.taggingLabel === false) return;
 
