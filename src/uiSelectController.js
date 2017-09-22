@@ -94,7 +94,7 @@ uis.controller('uiSelectCtrl',
             return angular.equals(this, item);
           }, ctrl.selected);
         } else {
-          ctrl.activeIndex = 0;
+          ctrl.activeIndex = ctrl.disableDefaultHighlight ? -1 : 0;
         }
       }
     }
@@ -122,7 +122,7 @@ uis.controller('uiSelectCtrl',
       ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
       // ensure that the index is set to zero for tagging variants
       // that where first option is auto-selected
-      if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false ) {
+      if ( ctrl.activeIndex === -1 && ctrl.taggingLabel !== false  && ctrl.disableDefaultHighlight !== true) {
         ctrl.activeIndex = 0;
       }
 
